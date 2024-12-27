@@ -1,6 +1,9 @@
 #Jupyter checkpoints
 .ipynb_checkpoints/
 
+#Csv temp files
+*.csv#
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
