@@ -7,11 +7,12 @@ name = "pypi"
 numpy = "*"
 pandas = "*"
 scikit-learn = "*"
-seaborn = "*"
-jupyter = "*"
 tensorflow = "*"
+kagglehub = "*"
 
 [dev-packages]
+seaborn = "*"
+jupyter = "*"
 
 [requires]
 python_version = "3.12"
