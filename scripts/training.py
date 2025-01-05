@@ -227,7 +227,7 @@ print (f"The accuracy of the model is {test_accuracy}")
 
 # # Saving the model 
 model_file_path=f'{MODELS_DIR}/{MODEL_NAME}'
-model.save(f'{model_file_path)
+model.save(f'{model_file_path}')
 print(f"Model saved as {model_file_path}")
 
 ## Saving classes

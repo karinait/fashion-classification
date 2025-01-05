@@ -1,3 +1,4 @@
+import argparse
 import json
 import numpy as np
 from PIL import Image
@@ -24,9 +25,6 @@ def prepare_input(image_path):
     return preprocess_input(X)
 
 
-# In[387]:
-
-
 def decode_predictions(preds, class_indices):
     predictions=preds[0]
     #order in descendent order
@@ -46,6 +44,19 @@ def decode_predictions(preds, class_indices):
 
     return top_classes
     
+# Set up argument parsing
+parser = argparse.ArgumentParser(description='Predict the class of an image using a trained model.')
+parser.add_argument('image_path', nargs='?', type=str, help='Path to the image file for prediction')    
+
+# Parse arguments
+args = parser.parse_args()
+
+# Prompt for image path if not provided
+if args.image_path is None:
+    image_path = input("Enter the path to the image: ")
+else:
+    image_path = args.image_path
+    
 #Load model
 model_file_path=f'{MODELS_DIR}/{MODEL_NAME}'
 model = keras.models.load_model(model_file_path)
@@ -58,9 +69,6 @@ class_indices={}
 with open(classes_json_path, 'r') as json_file:
     class_indices = json.load(json_file)
 print("Class indices loaded...")
-
-# Prompt for image path
-image_path = input("Enter the path to the image: ")
 
 #running prediction
 try:
