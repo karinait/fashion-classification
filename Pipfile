@@ -10,10 +10,11 @@ scikit-learn = "*"
 tensorflow = "*"
 kagglehub = "*"
 keras-image-helper = "*"
+ai-edge-litert = "*"
 
 [dev-packages]
 seaborn = "*"
 jupyter = "*"
 
 [requires]
-python_version = "3.12"
+python_version = "3.9"
