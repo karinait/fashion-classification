@@ -13,6 +13,7 @@ MODEL_NAME='final_classification_model.keras'
 TFLITE_MODEL_NAME='classification_model.tflite'
 CLASSES_JSON = 'class_indices.json'
 TARGET_SIZE = (320, 320)
+TOP_N_PREDICTIONS=5
 
 def load_image(image_path_or_url):
     # Check if the input is a URL
@@ -66,19 +67,16 @@ def decode_predictions(preds, class_indices):
     #order in descendent order
     sorted_indices = np.argsort(predictions)[::-1]  
 
-    top_n = 5
-    top_classes = []
-    top_scores = []
+    top_n = -1*TOP_N_PREDICTIONS
+    top_indices = np.argsort(predictions)[top_n:][::-1]
+    
+    # Create a list of tuples for the top predictions
+    top_predictions = [(class_label, predictions[index]) for class_label, index in class_indices.items() if index in top_indices]
 
-    index_to_class = {index: label for label, index in class_indices.items()}
+    # Convert the list of tuples to a dictionary
+    top_predictions_dict = {class_label: score for class_label, score in top_predictions}
 
-    for i in range(top_n):
-        index = sorted_indices[i]
-        class_label = index_to_class[index] 
-        score = predictions[index]
-        top_classes.append((class_label, score))
-
-    return top_classes
+    return top_predictions_dict
     
 # Set up argument parsing
 parser = argparse.ArgumentParser(description='Predict the class of an image using a trained model.')
@@ -110,9 +108,8 @@ print("Class indices loaded...")
 #running prediction
 try:
     preds = predict(interpreter, prepare_input(image_path))
-    top_predictions = decode_predictions(preds, class_indices)
+    top_predictions_dict = decode_predictions(preds, class_indices)
     print("Top 5 Predictions:")
-    for class_label, score in top_predictions:
-        print(f"{class_label}: {score:.4f}")
+    print(f"{top_predictions_dict}")
 except Exception as e:
     print(f"An error occurred during prediction: {e}")
