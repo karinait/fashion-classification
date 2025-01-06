@@ -2,7 +2,9 @@ import json
 import numpy as np
 import argparse
 import matplotlib.pyplot as plt
+import requests
 from PIL import Image
+from io import BytesIO
 from ai_edge_litert.interpreter import Interpreter
 
 
@@ -12,10 +14,36 @@ TFLITE_MODEL_NAME='classification_model.tflite'
 CLASSES_JSON = 'class_indices.json'
 TARGET_SIZE = (320, 320)
 
-def prepare_input(image_path):
-    with Image.open(image_path, 'r') as img:
-        img = img.resize((TARGET_SIZE), Image.NEAREST)
-    print(f"Loaded image in path: '{image_path}'")
+def load_image(image_path_or_url):
+    # Check if the input is a URL
+    if image_path_or_url.startswith('http://') or image_path_or_url.startswith('https://'):
+        # Fetch the image from the URL
+        response = requests.get(image_path_or_url)
+        
+        # Check the response status
+        if response.status_code == 200:
+            content_type = response.headers.get('Content-Type')
+            print(f"Content-Type: {content_type}")
+
+            if 'image' in content_type:
+                img = Image.open(BytesIO(response.content)) 
+                print(f"Loaded image from URL: '{image_path_or_url}'")
+            else:
+                raise ValueError("The content fetched is not an image.")
+        else:
+            raise ValueError(f"Error fetching image: {response.status_code}")
+
+    else:
+        # Otherwise treat it as a local path
+        with Image.open(image_path_or_url, 'r') as img:
+            print(f"Loaded image in path: '{image_path_or_url}'")
+    return img
+    
+
+def prepare_input(image_path_or_url):
+    img = load_image(image_path_or_url)
+    # Resize the image
+    img = img.resize(TARGET_SIZE, Image.NEAREST)
     x = np.array(img, dtype='float32')
     X = np.array([x])
     return preprocess_input(X)    
