@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-numpy = "*"
 pandas = "*"
 scikit-learn = "*"
 tensorflow = "*"
 kagglehub = "*"
 keras-image-helper = "*"
 ai-edge-litert = "*"
+numpy = "==1.26.4"
 
 [dev-packages]
 seaborn = "*"

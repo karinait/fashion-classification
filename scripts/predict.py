@@ -1,28 +1,36 @@
-import argparse
 import json
 import numpy as np
+import argparse
+import matplotlib.pyplot as plt
 from PIL import Image
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as preprocess_input
-
-from tensorflow.keras.preprocessing.image import load_img
-from tensorflow.keras.preprocessing.image import img_to_array
-
+from ai_edge_litert.interpreter import Interpreter
 
 
 MODELS_DIR = '../models'
 MODEL_NAME='final_classification_model.keras'
-#file with classes
+TFLITE_MODEL_NAME='classification_model.tflite'
 CLASSES_JSON = 'class_indices.json'
 TARGET_SIZE = (320, 320)
 
 def prepare_input(image_path):
-    img=load_img(image_path, target_size=TARGET_SIZE)
+    with Image.open(image_path, 'r') as img:
+        img = img.resize((TARGET_SIZE), Image.NEAREST)
     print(f"Loaded image in path: '{image_path}'")
-    x = img_to_array(img)
+    x = np.array(img, dtype='float32')
     X = np.array([x])
-    return preprocess_input(X)
+    return preprocess_input(X)    
+    
+def preprocess_input(x):
+        x /= 127.5
+        x -= 1.0
+        return x    
+    
+def predict(interpreter, X):
+    input_index = interpreter.get_input_details()[0]['index']
+    output_index =interpreter.get_output_details()[0]['index']
+    interpreter.set_tensor(input_index, X)
+    interpreter.invoke()
+    return interpreter.get_tensor(output_index)    
 
 
 def decode_predictions(preds, class_indices):
@@ -57,10 +65,11 @@ if args.image_path is None:
 else:
     image_path = args.image_path
     
-#Load model
-model_file_path=f'{MODELS_DIR}/{MODEL_NAME}'
-model = keras.models.load_model(model_file_path)
-print("Model loaded...")
+#create interpreter based on model
+tflite_model_path=f'{MODELS_DIR}/{TFLITE_MODEL_NAME}'
+interpreter = Interpreter(tflite_model_path)
+interpreter.allocate_tensors()
+print("Interpreter ready...")
 
 
 #load classes from json file
@@ -72,7 +81,7 @@ print("Class indices loaded...")
 
 #running prediction
 try:
-    preds = model.predict(prepare_input(image_path))
+    preds = predict(interpreter, prepare_input(image_path))
     top_predictions = decode_predictions(preds, class_indices)
     print("Top 5 Predictions:")
     for class_label, score in top_predictions:
