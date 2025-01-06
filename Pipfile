@@ -9,6 +9,7 @@ pandas = "*"
 scikit-learn = "*"
 tensorflow = "*"
 kagglehub = "*"
+keras-image-helper = "*"
 
 [dev-packages]
 seaborn = "*"
