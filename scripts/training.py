@@ -1,8 +1,8 @@
 import os
 import glob
-
-
+import json
 import warnings
+
 import random
 import pandas as pd
 import numpy as np
@@ -14,16 +14,10 @@ from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras.preprocessing.image import load_img
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.applications.mobilenet_v2 import preprocess_input as mobile_preprocess_input
+from tensorflow.keras.applications.mobilenet_v2 import preprocess_input
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
-from tensorflow.keras.applications.mobilenet_v2 import decode_predictions as mobile_decode_predictions
-from tensorflow.keras.applications.inception_v3 import preprocess_input as inception_preprocess_input
-from tensorflow.keras.applications.inception_v3 import InceptionV3
-from tensorflow.keras.applications.inception_v3 import decode_predictions as inception_decode_predictions
-
 from tensorflow.keras.callbacks import ModelCheckpoint, Callback
 from tensorflow.keras.mixed_precision import set_global_policy
-from tensorflow.keras import regularizers
 
 
 ## CONSTANTS
@@ -178,7 +172,7 @@ use_multiprocessing=False
 if workers>1:
    use_multiprocessing=True
 
-train_image_gen = ImageDataGenerator(preprocessing_function=mobile_preprocess_input)
+train_image_gen = ImageDataGenerator(preprocessing_function=preprocess_input)
 train_gen = train_image_gen.flow_from_dataframe(
     dataframe=full_train_df,
     directory=images_dir, 
@@ -207,7 +201,7 @@ history = model.fit(
 )
 
 # # Evaluating the model 
-test_image_gen = ImageDataGenerator(preprocessing_function=mobile_preprocess_input)
+test_image_gen = ImageDataGenerator(preprocessing_function=preprocess_input)
 test_gen = test_image_gen.flow_from_dataframe(
     dataframe=test_df,
     directory=images_dir, 
@@ -231,7 +225,7 @@ model.save(f'{model_file_path}')
 print(f"Model saved as {model_file_path}")
 
 ## Saving classes
-class_indices = full_train_gen.class_indices
+class_indices = train_gen.class_indices
 classes_json_path=f'{MODELS_DIR}/{CLASSES_JSON}'
 with open(classes_json_path, 'w') as json_file:
     json.dump(class_indices, json_file)
