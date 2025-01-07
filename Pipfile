@@ -11,6 +11,7 @@ keras-image-helper = "*"
 numpy = "1.26.4"
 tflite-runtime = "==2.7.0"
 tensorflow = "==2.7.0"
+protobuf = "==3.20.3"
 
 [dev-packages]
 seaborn = "*"
