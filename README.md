@@ -1,7 +1,10 @@
 
 # Fashion Classification Project
 
-This project involves building a convolusional neural network to predict the type of a clothing item from a picture. The prediction service could be used from any retail application where the user can update a picture of an item and the system proposes an item category from the predefined ones.
+This project aims to develop a convolutional neural network (CNN) to predict the type of clothing item from an image. The model is designed to classify images into predefined categories of fashion items, such as shirts, shoes, and accessories. The prediction service can be integrated into any retail application, allowing users to upload an image of a clothing item, after which the system proposes the most relevant category based on the visual content of the image. This functionality can enhance user experiences by automating product categorization in online retail environments.
+
+---
+
 
 ## Table of Contents
 
@@ -19,7 +22,7 @@ This project involves building a convolusional neural network to predict the typ
 
 ## Dataset
 
-The were two datasets used for this projects, both sourced from Kaggle. 
+There were two datasets used for this project, both sourced from Kaggle. 
 
 - **[Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)**
 
@@ -40,12 +43,12 @@ The were two datasets used for this projects, both sourced from Kaggle.
 
 ## Getting Started
 
-To get a local copy up and running, follow these steps:
+To get started with this project and run the prediction service locally, you'll need to set up your development environment and ensure a few prerequisites are installed. Follow the steps below to get a local copy of the repository, build the necessary Docker image, and run the service to begin making predictions.
 
 ### Prerequisites
 - Install [Python 3.9](https://wiki.python.org/moin/BeginnersGuide/Download)  
 - Install [Docker](https://www.docker.com/get-started)
-- Install [Pipenv](https://pypi.org/project/pipenv/#installation)
+- Install [Pipenv](https://pypi.org/project/pipenv/#installation) (optional)
 
 ---
 
@@ -64,7 +67,7 @@ To get a local copy up and running, follow these steps:
    ```
 
 3. **Run the Docker Container**
-   Start the container to run the project:
+   Start the container to run the prediction service:
    ```bash
    docker run -it --rm -p8080:8080 fashion-classifier
    ```
@@ -81,7 +84,7 @@ To get a local copy up and running, follow these steps:
 	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
    ```   
  
-   The category with the highest score would correspond to the most probable item type for the image. In this example the most suitable item type for the image would be "Formal Shoes".   
+   The category with the highest score corresponds to the most probable item type for the image. In this example, the most suitable item type for the image would be "Formal Shoes".   
 
    
 ---
@@ -89,7 +92,7 @@ To get a local copy up and running, follow these steps:
 
 ## Predictions with a Python script
 
-   In case you want to run predictions against some images stored locally in the repository, you could use the predict.py script. To do so, please follow these steps:
+  If you want to run predictions on images stored locally in the repository, you can use the predict.py script. To do so, please follow these steps:
    
    
 1. **Prepare the Environment**
@@ -110,7 +113,7 @@ To get a local copy up and running, follow these steps:
    python predict.py
    ```   
    
-   The script will request a path to the image for which you want to predict the item type. You can type in the path to any of the images inside the fashion-classification/dataset/test-images folder. For example: ../dataset/test-images/2639.jpg (note: enter the path without any "")
+   The script will prompt you to enter the path to the image for which you want to predict the item type. You can provide the path to any of the images inside the fashion-classification/dataset/test-images folder. For example: ../dataset/test-images/2639.jpg (Note: enter the path without any quotation marks).
    
    The response should be something like:
    
@@ -154,32 +157,32 @@ fashion-classification/
 
 ## Jupyter notebooks
 
-The jupyter notebooks for this project were run locally on a machine with a GPU where tensorflow was installed. The explanation on how to setup the environment for tensorflow is out of the scope of this document but without it this notebooks can't be run.
+The Jupyter notebooks for this project were run locally on a machine with a GPU, where TensorFlow was installed. The explanation on how to set up the environment for TensorFlow is outside the scope of this document, but without it, these notebooks cannot be run.
 
-The jupyter notebooks in this project were used for the Exploratory Data Analysis, Training and Inference. Here is a description of every notebook:
+The Jupyter notebooks in this project were used for Exploratory Data Analysis, Training, and Inference. Below is a description of each notebook:
 
 -**notebook_1_eda_small_images.ipynb**
 
-This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks and tune their parameters.
+This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks while tuning their parameters.
 
-The final result in this notebook is the selection of the final model to train on the larger dataset
+The final result in this notebook is the selection of the model to be trained on the larger dataset
 
 
 -**notebook2_training_large_dataset.ipynb**
 
-This notebook was used mainly to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
+This notebook was used primarily to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
 
 -**predict.ipynb**
 
-This notebook was used to make predictions by using the model trained in the notebook 2 and using tensorflow for inference
+This notebook was used to make predictions using the model trained in the notebook 2, leveraging Tensorflow for inference
 
 -**predict_tflite.ipynb**
 
-This notebook was used to create a tflite version of the model and use that version to make predictions through tflite runtime
+This notebook was used to create a TensorFlow Lite (TFLite) version of the model and use it to make predictions via the TFLite runtime
 
 ---
 
 ## AWS Lambda
 
-For the deployment of the project to AWS Lambda, I used the AWS SAM CLI to create a baseline and then adjusted the files as needed. The function was deployed sucessfully and there is a video in the /video folder showing a simple test of this function.
+For the deployment of the project to AWS Lambda, I used the AWS SAM CLI to create a baseline and then adjusted the files as needed. The function was deployed successfully, and a video demonstrating a simple test of this function can be found in the /video folder.
 
