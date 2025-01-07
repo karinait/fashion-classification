@@ -75,6 +75,13 @@ To get a local copy up and running, follow these steps:
    curl -X POST "http://localhost:8080/2015-03-31/functions/function/invocations" -H "Content-Type: application/json" \
 	-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
    ```
+   The response should be something like:
+   
+   ```
+	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
+   ```   
+ 
+   The category with the highest score would correspond to the most probable item type corresponding to the image evaluated. In this example the category would be "Formal Shoes".   
 
 ## Predictions with a Python script
 
@@ -108,8 +115,6 @@ To get a local copy up and running, follow these steps:
 
 	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}
    ```
- 
-    The category with the highest score would correspond to the most probable item type corresponding to the image evaluated. In this example the category would be "Formal Shoes".
    
 ---
 
