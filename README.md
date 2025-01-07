@@ -8,10 +8,11 @@ This project involves building a convolusional neural network to predict the typ
 - [Dataset](#dataset)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
-- [Steps to Run the Project with Docker](#steps-to-run-the-project-with-docker)
-- [Other ways to perform predictions](#other-ways-to-perform-predictions)
+- [Run the Prediction Service with Docker](#run-the-prediction-service-with-docker)
+- [Predictions with a Python script](#prediction-with-a-python-script)
 - [Project Structure](#project-structure)
-- [Notebooks](#notebooks)
+- [Jupyter Notebooks](#jupyter-notebooks)
+- [AWS Lambda](#aws-lambda)
 
 ---
 
@@ -20,8 +21,9 @@ This project involves building a convolusional neural network to predict the typ
 
 The were two datasets used for this projects, both sourced from Kaggle. 
 
-**<a name="largedata">[Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)</a>**
-**<a name="smalldata">[Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)</a>**
+- **<a name="largedata">[Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)</a>**
+
+- **<a name="smalldata">[Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)</a>**
 
 ---
 
@@ -43,11 +45,11 @@ To get a local copy up and running, follow these steps:
 ### Prerequisites
 - Install [Python 3.9](https://wiki.python.org/moin/BeginnersGuide/Download)  
 - Install [Docker](https://www.docker.com/get-started)
-- Install [Pipenv] (optional) (https://pypi.org/project/pipenv/#installation)
+- Install [Pipenv] (https://pypi.org/project/pipenv/#installation) (optional)
 
 ---
 
-## Steps to Run the Project with Docker
+## Run the Prediction Service with Docker
 
 1. **Clone the Repository**
    ```bash
@@ -74,12 +76,13 @@ To get a local copy up and running, follow these steps:
 	-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
    ```
 
-## Other ways to perform predictions
+## Predictions with a Python script
 
    In case you want to run predictions against some images stored locally in the repository, you could use the predict.py script in order to do that. To do so, please follow these steps:
    
    
 1. **Prepare the Environment**
+
    Create a virtual environment with pipenv for python 3.9 and install all the dependencies  
    ```bash
    cd fashion-classification
@@ -88,6 +91,7 @@ To get a local copy up and running, follow these steps:
    ```  
 
 2. **Use the predict.py script to run predictions**
+
    Activate the pipenv environment and from there use the predict.py script in fashion-classification/scripts
    ```bash
    pipenv shell
@@ -116,24 +120,25 @@ The relevant folders and files in this project are the ones listed below:
 ```
 fashion-classification/
 │
-├── dataset/             					# Contains the small version of the dataset and some image for testing
+├── dataset/		# Contains the small version of the dataset and some image for testing
 │   ├── fashion-product-images-small/		# Folder with the small images dataset downloaded from kaggle
-│		├── images							# Images as .jpg
-│		├── styles.csv						# Csv with all the information about the images
-│   ├── test-images/						# Folder with large images for test	
-├── fashion-classifier/                     # Folder created with AWS SAM CLI for the deployment to AWS Lambda
-│   ├── app/								# Folder with all the necessary files for deployment
-│		├── Dockerfile						# Docker configuration
-│		├── app.py 							# Script with lambda function
-│		├── classification_model.tflite 	# Trained Tflite model
-│		├── class_indices.json				# Json with the name and indices of the classes used to train the model
-│		├── requirements.txt				# List of dependencies that must be installed in the Docker container		
-├── models/              	# Models created during evaluation and training of different CNN
-├── notebooks/              # Jupyter notebooks for analysis
-├── Pipfile              	# Project top-level requirements (to be used with pipenv)
-├── Pipfile.lock	        # Required dependencies with specific versions (to be used with pipenv)
-├── README.md               # Project documentation
-└── .gitignore              # Git ignore file
+│		├── images		# Images as .jpg
+│		├── styles.csv		# Csv with all the information about the images
+│   ├── test-images/		# Folder with large images for test	
+├── fashion-classifier/		# Folder created with AWS SAM CLI for the deployment to AWS Lambda
+│   ├── app/		# Folder with all the necessary files for deployment
+│		├── Dockerfile		# Docker configuration
+│		├── app.py		# Script with lambda function
+│		├── classification_model.tflite		# Trained Tflite model
+│		├── class_indices.json		# Json with the name and indices of the classes used to train the model
+│		├── requirements.txt		# List of dependencies that must be installed in the Docker container		
+├── models/		# Models created during evaluation and training of different CNN
+├── notebooks/		# Jupyter notebooks for analysis
+├── Pipfile		# Project top-level requirements (to be used with pipenv)
+├── Pipfile.lock		# Required dependencies with specific versions (to be used with pipenv)
+├── README.md		# Project documentation
+├── video/		# Folder that shows the lambda function being tested in AWS Lambda
+└── .gitignore		# Git ignore file
 ```
 
 ---
@@ -144,24 +149,28 @@ The jupyter notebooks for this project were run locally on a machine with a GPU 
 
 The jupyter notebooks in this project were used for the Exploratory Data Analysis, Training and Inference. Here is a description of every notebook:
 
-**notebook_1_eda_small_images.ipynb**
+-**notebook_1_eda_small_images.ipynb**
 
 This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](#smalldata) and to train several neural networks and tune their parameters.
 
 The final result in this notebook is the selection of the final model to train on the larger dataset
 
 
-**notebook2_training_large_dataset.ipynb**
+-**notebook2_training_large_dataset.ipynb**
 
 This notebook was used mainly to train the model selected in the notebook1 on the [Large Images Dataset](#largedata) 
 
-**predict.ipynb**
+-**predict.ipynb**
 
 This notebook was used to make predictions by using the model trained in the notebook 2 and using tensorflow for inference
 
-**predict_tflite.ipynb**
+-**predict_tflite.ipynb**
 
 This notebook was used to create a tflite version of the model and use that version to make predictions through tflite runtime
 
+---
 
+## AWS Lambda
+
+For the deployment of the project to AWS Lambda, I used the AWS SAM CLI to create a baseline and then adjusted the files as needed. The function was deployed sucessfully and there is a video in the /video folder showing a simple test of this function.
 
