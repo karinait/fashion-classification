@@ -10,7 +10,8 @@ tensorflow = "*"
 kagglehub = "*"
 keras-image-helper = "*"
 ai-edge-litert = "*"
-numpy = "==1.26.4"
+numpy = "===1.26.4"
+tflite-runtime = "==2.7.0"
 
 [dev-packages]
 seaborn = "*"

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3934bfd53eaabaa9dd7e04b32b0d97296233fba3455c485bf04b0899d08c1529"
+            "sha256": "d78a65c380addfe398abcf2b08c96f8eaada88e2e9d57a6d0ae6f0cf226857a7"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -751,11 +751,11 @@
         },
         "pygments": {
             "hashes": [
-                "sha256:4755e6e64d22161d5b61432c0600c923c5927214e7c956e31c23923c89251a9b",
-                "sha256:afc4146269910d4bdfabcd27c24923137a74d562a23a320a41a55ad303e19783"
+                "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f",
+                "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==2.19.0"
+            "version": "==2.19.1"
         },
         "python-dateutil": {
             "hashes": [
@@ -940,6 +940,21 @@
             ],
             "markers": "python_version >= '3.9'",
             "version": "==2.5.0"
+        },
+        "tflite-runtime": {
+            "hashes": [
+                "sha256:436e31b93aa7ebbff3a5e385f04a50daf36393bde36bc4c6634e6e3349d5e575",
+                "sha256:7416d2e9a7bcd3d602299c2827146688a4ca9ddf3fdbb23fe949a47e0023c438",
+                "sha256:945e7b8e6fccd4a2760148a386b1229a60d19b29e9c8833ea870c876ba25cb9d",
+                "sha256:9b1309c10d9283b8a2d91537208b23ef7b0a36456648f5be8691bb8aa12e4c81",
+                "sha256:acaba20af5c4b3736da7ac1fff00f5e246ebb2478d988f63259ff44c547e2b9b",
+                "sha256:c25b178527f65b85689e44795946500bca6121489135ec3fd15e82ef2df2adb2",
+                "sha256:e4ad4b8175c9b8ba39e2e13aa4416bb35e8cb5d362a65cc9409942d146637d9d",
+                "sha256:e78e5accf7975fbd8f9783963648c1076ef0cce9a9419ca5e57bde82a50e3c53",
+                "sha256:f776809ac80cdf83e32b57532a18ea7fcf4719f9de1f686927b520f76886ae57"
+            ],
+            "index": "pypi",
+            "version": "==2.7.0"
         },
         "threadpoolctl": {
             "hashes": [
@@ -2383,11 +2398,11 @@
         },
         "pygments": {
             "hashes": [
-                "sha256:4755e6e64d22161d5b61432c0600c923c5927214e7c956e31c23923c89251a9b",
-                "sha256:afc4146269910d4bdfabcd27c24923137a74d562a23a320a41a55ad303e19783"
+                "sha256:61c16d2a8576dc0649d9f39e089b5f02bcd27fba10d8fb4dcc28173f7a45151f",
+                "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c"
             ],
             "markers": "python_version >= '3.8'",
-            "version": "==2.19.0"
+            "version": "==2.19.1"
         },
         "pyparsing": {
             "hashes": [

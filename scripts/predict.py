@@ -1,48 +1,53 @@
+import os
 import json
 import numpy as np
 import argparse
-import matplotlib.pyplot as plt
 import requests
 from PIL import Image
 from io import BytesIO
-from ai_edge_litert.interpreter import Interpreter
-
+import tflite_runtime.interpreter as tflite
 
 MODELS_DIR = '../models'
-MODEL_NAME='final_classification_model.keras'
-TFLITE_MODEL_NAME='classification_model.tflite'
+MODEL_NAME = 'final_classification_model.keras'
+TFLITE_MODEL_NAME = 'classification_model.tflite'
 CLASSES_JSON = 'class_indices.json'
 TARGET_SIZE = (320, 320)
-TOP_N_PREDICTIONS=5
+TOP_N_PREDICTIONS = 5
 
 def load_image(image_path_or_url):
-    # Check if the input is a URL
     if image_path_or_url.startswith('http://') or image_path_or_url.startswith('https://'):
-        # Fetch the image from the URL
         response = requests.get(image_path_or_url)
-        
-        # Check the response status
         if response.status_code == 200:
             content_type = response.headers.get('Content-Type')
-            print(f"Content-Type: {content_type}")
-
             if 'image' in content_type:
-                img = Image.open(BytesIO(response.content)) 
+                img = Image.open(BytesIO(response.content))
                 print(f"Loaded image from URL: '{image_path_or_url}'")
             else:
                 raise ValueError("The content fetched is not an image.")
         else:
             raise ValueError(f"Error fetching image: {response.status_code}")
-
     else:
-        # Otherwise treat it as a local path
-        with Image.open(image_path_or_url, 'r') as img:
-            print(f"Loaded image in path: '{image_path_or_url}'")
+        img = Image.open(image_path_or_url)
+        print(f"Loaded image from path: '{image_path_or_url}'")
     return img
-    
 
-def prepare_input(image_path_or_url):
-    img = load_image(image_path_or_url)
+def initialize_interpreter():
+    tflite_model_path = os.environ.get('MODEL_PATH', './classification_model.tflite')    
+    interpreter = tflite.Interpreter(model_path=tflite_model_path)
+    interpreter.allocate_tensors()    
+    return interpreter
+    
+    
+def load_class_indices():
+    #load classes from json file
+    classes_json_path=os.environ.get('CLASSES_PATH', './class_indices.json')
+    class_indices={}
+    with open(classes_json_path, 'r') as json_file:
+        class_indices = json.load(json_file)
+    return class_indices
+    
+def prepare_input(url):
+    img = load_image(url)
     # Resize the image
     img = img.resize(TARGET_SIZE, Image.NEAREST)
     x = np.array(img, dtype='float32')
@@ -54,7 +59,7 @@ def preprocess_input(x):
         x -= 1.0
         return x    
     
-def predict(interpreter, X):
+def predict_for_image(interpreter, X):
     input_index = interpreter.get_input_details()[0]['index']
     output_index =interpreter.get_output_details()[0]['index']
     interpreter.set_tensor(input_index, X)
@@ -63,7 +68,8 @@ def predict(interpreter, X):
 
 
 def decode_predictions(preds, class_indices):
-    predictions=preds[0]
+    predictions=preds[0].tolist()
+    
     #order in descendent order
     sorted_indices = np.argsort(predictions)[::-1]  
 
@@ -77,37 +83,40 @@ def decode_predictions(preds, class_indices):
     top_predictions_dict = {class_label: score for class_label, score in top_predictions}
 
     return top_predictions_dict
-    
+
 # Set up argument parsing
 parser = argparse.ArgumentParser(description='Predict the class of an image using a trained model.')
-parser.add_argument('image_path', nargs='?', type=str, help='Path to the image file for prediction')    
+parser.add_argument('image_path_or_url', nargs='?', type=str, help='Path or Url to the image file for prediction')    
 
 # Parse arguments
 args = parser.parse_args()
 
 # Prompt for image path if not provided
-if args.image_path is None:
-    image_path = input("Enter the path to the image: ")
+if args.image_path_or_url is None:
+    image_path_or_url = input("Enter the path to the image or URL: ")
 else:
-    image_path = args.image_path
-    
-#create interpreter based on model
-tflite_model_path=f'{MODELS_DIR}/{TFLITE_MODEL_NAME}'
-interpreter = Interpreter(tflite_model_path)
+    image_path_or_url = args.image_path_or_url
+
+# Validate input before proceeding
+if not image_path_or_url:
+    raise ValueError("No image path or URL provided.")
+
+# Create interpreter based on model
+tflite_model_path = f'{MODELS_DIR}/{TFLITE_MODEL_NAME}'
+interpreter = tflite.Interpreter(tflite_model_path)
 interpreter.allocate_tensors()
 print("Interpreter ready...")
 
-
-#load classes from json file
-classes_json_path=f'{MODELS_DIR}/{CLASSES_JSON}'
-class_indices={}
+# Load class indices from JSON file
+classes_json_path = f'{MODELS_DIR}/{CLASSES_JSON}'
+class_indices = {}
 with open(classes_json_path, 'r') as json_file:
     class_indices = json.load(json_file)
 print("Class indices loaded...")
 
-#running prediction
+# Running prediction
 try:
-    preds = predict(interpreter, prepare_input(image_path))
+    preds = predict_for_image(interpreter, prepare_input(image_path_or_url))
     top_predictions_dict = decode_predictions(preds, class_indices)
     print("Top 5 Predictions:")
     print(f"{top_predictions_dict}")
