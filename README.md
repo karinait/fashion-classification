@@ -89,7 +89,7 @@ To get a local copy up and running, follow these steps:
 
 ## Predictions with a Python script
 
-   In case you want to run predictions against some images stored locally in the repository, you could use the predict.py script in order to do that. To do so, please follow these steps:
+   In case you want to run predictions against some images stored locally in the repository, you could use the predict.py script. To do so, please follow these steps:
    
    
 1. **Prepare the Environment**
@@ -103,14 +103,14 @@ To get a local copy up and running, follow these steps:
 
 2. **Use the predict.py script to run predictions**
 
-   Activate the pipenv environment and from there use the predict.py script. From the fashion-classification folder do:
+   Activate the pipenv environment and run the predict.py by doing:
    ```bash
    pipenv shell
    cd scripts
    python predict.py
    ```   
    
-   The script will request a path to the image and you can type in the path to any of the images inside the fashion-classification/dataset/test-images folder. For example: ../dataset/test-images/2639.jpg (note: enter the path without any "")
+   The script will request a path to the image for which you want to predict the item type. You can type in the path to any of the images inside the fashion-classification/dataset/test-images folder. For example: ../dataset/test-images/2639.jpg (note: enter the path without any "")
    
    The response should be something like:
    
@@ -129,22 +129,22 @@ The relevant folders and files in this project are the ones listed below:
 ```
 fashion-classification/
 │
-├── dataset/		# Contains the small version of the dataset and some image for testing
-│   ├── fashion-product-images-small/		# Folder with the small images dataset downloaded from kaggle
+├── dataset/		# Contains the small version of the dataset and some images for testing
+│   ├── fashion-product-images-small/	# Folder with the small images dataset downloaded from kaggle
 │		├── images		# Images as .jpg
 │		├── styles.csv		# Csv with all the information about the images
 │   ├── test-images/		# Folder with large images for test	
 ├── fashion-classifier/		# Folder created with AWS SAM CLI for the deployment to AWS Lambda
 │   ├── app/		# Folder with all the necessary files for deployment
 │		├── Dockerfile		# Docker configuration
-│		├── app.py		# Script with lambda function
+│		├── app.py			# Script with lambda function
 │		├── classification_model.tflite		# Trained Tflite model
-│		├── class_indices.json		# Json with the name and indices of the classes used to train the model
-│		├── requirements.txt		# List of dependencies that must be installed in the Docker container		
+│		├── class_indices.json				# Json with the name and indices of the classes used to train the model
+│		├── requirements.txt				# List of dependencies that must be installed in the Docker container		
 ├── models/		# Models created during evaluation and training of different CNN
 ├── notebooks/		# Jupyter notebooks for analysis
 ├── Pipfile		# Project top-level requirements (to be used with pipenv)
-├── Pipfile.lock		# Required dependencies with specific versions (to be used with pipenv)
+├── Pipfile.lock	# Required dependencies with specific versions (to be used with pipenv)
 ├── README.md		# Project documentation
 ├── video/		# Folder that shows the lambda function being tested in AWS Lambda
 └── .gitignore		# Git ignore file
@@ -154,20 +154,20 @@ fashion-classification/
 
 ## Jupyter notebooks
 
-The jupyter notebooks for this project were run locally on a machine with a GPU where tensorflow was installed. The explanation on how to setup the environment for tensorflow is out of the scope of this document
+The jupyter notebooks for this project were run locally on a machine with a GPU where tensorflow was installed. The explanation on how to setup the environment for tensorflow is out of the scope of this document but without it this notebooks can't be run.
 
 The jupyter notebooks in this project were used for the Exploratory Data Analysis, Training and Inference. Here is a description of every notebook:
 
 -**notebook_1_eda_small_images.ipynb**
 
-This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](#smalldata) and to train several neural networks and tune their parameters.
+This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks and tune their parameters.
 
 The final result in this notebook is the selection of the final model to train on the larger dataset
 
 
 -**notebook2_training_large_dataset.ipynb**
 
-This notebook was used mainly to train the model selected in the notebook1 on the [Large Images Dataset](#largedata) 
+This notebook was used mainly to train the model selected in the notebook1 on the [Large Images Dataset]((https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)) 
 
 -**predict.ipynb**
 
