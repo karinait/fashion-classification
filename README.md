@@ -21,9 +21,9 @@ This project involves building a convolusional neural network to predict the typ
 
 The were two datasets used for this projects, both sourced from Kaggle. 
 
-- **<a name="largedata">[Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)</a>**
+- **[Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)**
 
-- **<a name="smalldata">[Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)</a>**
+- **[Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)**
 
 ---
 
@@ -167,7 +167,7 @@ The final result in this notebook is the selection of the final model to train o
 
 -**notebook2_training_large_dataset.ipynb**
 
-This notebook was used mainly to train the model selected in the notebook1 on the [Large Images Dataset]((https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)) 
+This notebook was used mainly to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
 
 -**predict.ipynb**
 
