@@ -81,7 +81,11 @@ To get a local copy up and running, follow these steps:
 	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
    ```   
  
-   The category with the highest score would correspond to the most probable item type corresponding to the image evaluated. In this example the category would be "Formal Shoes".   
+   The category with the highest score would correspond to the most probable item type for the image. In this example the most suitable item type for the image would be "Formal Shoes".   
+
+   
+---
+
 
 ## Predictions with a Python script
 
@@ -99,7 +103,7 @@ To get a local copy up and running, follow these steps:
 
 2. **Use the predict.py script to run predictions**
 
-   Activate the pipenv environment and from there use the predict.py script in fashion-classification/scripts
+   Activate the pipenv environment and from there use the predict.py script. From the fashion-classification folder do:
    ```bash
    pipenv shell
    cd scripts
