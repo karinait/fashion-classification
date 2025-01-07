@@ -9,8 +9,7 @@ scikit-learn = "*"
 tensorflow = "*"
 kagglehub = "*"
 keras-image-helper = "*"
-numpy = "===1.26.4"
-tflite-runtime = "==2.7.0"
+numpy = "1.26.4"
 
 [dev-packages]
 seaborn = "*"
