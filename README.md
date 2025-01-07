@@ -45,7 +45,7 @@ To get a local copy up and running, follow these steps:
 ### Prerequisites
 - Install [Python 3.9](https://wiki.python.org/moin/BeginnersGuide/Download)  
 - Install [Docker](https://www.docker.com/get-started)
-- Install [Pipenv] (https://pypi.org/project/pipenv/#installation) (optional)
+- Install [Pipenv](https://pypi.org/project/pipenv/#installation)
 
 ---
 
