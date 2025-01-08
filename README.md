@@ -99,52 +99,58 @@ If you want to run predictions on alternatives ways, you can use the predict.py 
 1. **Prepare the Environment**
 
 Create a virtual environment with Pipenv for Python 3.9 and install all the dependencies: 
-	```bash
-	cd fashion-classification
-	pipenv --python 3.9
-	pipenv install
-	```  
+
+```bash
+cd fashion-classification
+pipenv --python 3.9
+pipenv install
+```  
 
 2. **Run predictions**
 
 The first step is to activate the Pipenv environment and navigate to the scripts folder:
 
-	```bash
-	pipenv shell
-	cd scripts
-	```   	
+```bash
+pipenv shell
+cd scripts
+```   	
 	
 From there you can:
 
 a)***Run the script.py script***
 
-	```bash
-	python predict.py "../dataset/test-images/2639.jpg"
-	```   	
+```bash
+python predict.py "../dataset/test-images/2639.jpg"
+```   	
 
-	The response will look like this:
-	```bash
-	Top 5 Predictions:
+The response will look like this:
+	
+```bash
+Top 5 Predictions:
 
-	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
-	```	
+{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
+```	
 or
 
 b)***Serve the prediction script as a service***
 
-	1-Start the Flask application using Gunicorn:
-		```bash
-		gunicorn predict:app --bind 0.0.0.0:8080
-		``` 
-	2-Use curl to send a request to the service with the path or URL of an image:
-		```bash	
-		curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
-		-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
-		``` 
+1-Start the Flask application using Gunicorn:
 
-	The response should be something like:
-	```bash	   
-	{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
+	```bash
+	gunicorn predict:app --bind 0.0.0.0:8080
+	``` 
+	
+2-Use curl to send a request to the service with the path or URL of an image:
+
+	```bash	
+	curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
+	-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
+	``` 
+
+The response should be something like:
+
+```bash	   
+{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
 			```
 
 ---
@@ -187,24 +193,24 @@ The Jupyter notebooks for this project were run locally on a machine with a GPU,
 
 The Jupyter notebooks in this project were used for Exploratory Data Analysis, Training, and Inference. Below is a description of each notebook:
 
-	-**notebook_1_eda_small_images.ipynb**
+-**notebook_1_eda_small_images.ipynb**
 
-	This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks while tuning their parameters.
+This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks while tuning their parameters.
 
-	The final result in this notebook is the selection of the model to be trained on the larger dataset
+The final result in this notebook is the selection of the model to be trained on the larger dataset
 
 
-	-**notebook2_training_large_dataset.ipynb**
+-**notebook2_training_large_dataset.ipynb**
 
-	This notebook was used primarily to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
+This notebook was used primarily to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
 
-	-**predict.ipynb**
+-**predict.ipynb**
 
-	This notebook was used to make predictions using the model trained in the notebook 2, leveraging Tensorflow for inference
+This notebook was used to make predictions using the model trained in the notebook 2, leveraging Tensorflow for inference
 
-	-**predict_tflite.ipynb**
+-**predict_tflite.ipynb**
 
-	This notebook was used to create a TensorFlow Lite (TFLite) version of the model and use it to make predictions via the TFLite runtime
+This notebook was used to create a TensorFlow Lite (TFLite) version of the model and use it to make predictions via the TFLite runtime
 
 ---
 
