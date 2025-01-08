@@ -64,21 +64,6 @@ tf.random.set_seed(42)
 #hide some warnings
 warnings.filterwarnings('ignore', category=UserWarning)
 
-def create_kaggle_json():
-
-    kaggle_json_content = f'{{"username":"{os.getenv("KAGGLE_USERNAME")}", "key":"{os.getenv("KAGGLE_KEY")}"}}'
-
-    kaggle_json_path = os.path.expanduser("~/.kaggle/kaggle.json") 
-    os.makedirs(os.path.dirname(kaggle_json_path), exist_ok=True)  
-
-    with open(kaggle_json_path, 'w') as f:
-        f.write(kaggle_json_content)
-
-    os.chmod(kaggle_json_path, 0o600)  # Permissions to allow only the user to access the file
-
-
-
-
 # Checking for invalid filenames and getting information about images
 def create_dataset(csv_file_path, images_dir):   
     #read dataset and skip some bad lines
@@ -140,8 +125,7 @@ def make_model(count_classes, learning_rate, inner_layer_units, droprate):
 
 
 
-#download the csv
-create_kaggle_json()
+#download the dataset from kagglehub
 path_data_files = kagglehub.dataset_download("paramaggarwal/fashion-product-images-dataset")
 print("Path to dataset files:", path_data_files)
 
