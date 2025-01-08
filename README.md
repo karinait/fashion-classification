@@ -149,9 +149,9 @@ b)***Serve the prediction script as a service***
 
 The response should be something like:
 
-```bash	   
-{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
-			```
+	```bash	   
+	{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
+	```
 
 ---
 
