@@ -12,9 +12,10 @@ This project aims to develop a convolutional neural network (CNN) to predict the
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
 - [Run the Prediction Service with Docker](#run-the-prediction-service-with-docker)
-- [Predictions with a Python script](#prediction-with-a-python-script)
+- [Other Ways to Run Predictions](#other-ways-to-run-predictions)
 - [Project Structure](#project-structure)
 - [Jupyter Notebooks](#jupyter-notebooks)
+- [Scripts](#scripts)
 - [AWS Lambda](#aws-lambda)
 
 ---
@@ -54,76 +55,100 @@ To get started with this project and run the prediction service locally, you'll 
 
 ## Run the Prediction Service with Docker
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/karinait/fashion-classification.git
-   cd fashion-classification
-   ```
-2. **Build the Docker Image**
-   Use the provided `Dockerfile` to build the Docker image:
-   ```bash
-   cd fashion-classifier/app
-   docker build -t fashion-classifier .
-   ```
+	1. **Clone the Repository**
+	   ```bash
+	   git clone https://github.com/karinait/fashion-classification.git
+	   cd fashion-classification
+	   ```
+	2. **Build the Docker Image**
+	   Use the provided `Dockerfile` to build the Docker image:
+	   ```bash
+	   cd fashion-classifier/app
+	   docker build -t fashion-classifier .
+	   ```
 
-3. **Run the Docker Container**
-   Start the container to run the prediction service:
-   ```bash
-   docker run -it --rm -p8080:8080 fashion-classifier
-   ```
+	3. **Run the Docker Container**
+	   Start the container to run the prediction service:
+	   ```bash
+	   docker run -it --rm -p8080:8080 fashion-classifier
+	   ```
 
-4. **Access the Service Locally**
-   Use curl to post an image url to the service running at localhost:
-   ```
-   curl -X POST "http://localhost:8080/2015-03-31/functions/function/invocations" -H "Content-Type: application/json" \
-	-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
-   ```
-   The response should be something like:
-   
-   ```
-	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
-   ```   
- 
-   The category with the highest score corresponds to the most probable item type for the image. In this example, the most suitable item type for the image would be "Formal Shoes".   
+	4. **Access the Service Locally**
+	   Use curl to post an image url to the service running at localhost:
+	   ```
+	   curl -X POST "http://localhost:8080/2015-03-31/functions/function/invocations" -H "Content-Type: application/json" \
+		-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
+	   ```
+	   The response should be something like:
+	   
+	   ```
+		{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
+	   ```   
+	 
+	   The category with the highest score corresponds to the most probable item type for the image. In this example, the most suitable item type for the image would be "Formal Shoes".   
 
-   
----
-
-
-## Predictions with a Python script
-
-  If you want to run predictions on images stored locally in the repository, you can use the predict.py script. To do so, please follow these steps:
-   
-   
-1. **Prepare the Environment**
-
-   Create a virtual environment with pipenv for python 3.9 and install all the dependencies  
-   ```bash
-   cd fashion-classification
-   pipenv --python 3.9
-   pipenv install
-   ```  
-
-2. **Use the predict.py script to run predictions**
-
-   Activate the pipenv environment and run the predict.py by doing:
-   ```bash
-   pipenv shell
-   cd scripts
-   python predict.py
-   ```   
-   
-   The script will prompt you to enter the path to the image for which you want to predict the item type. You can provide the path to any of the images inside the fashion-classification/dataset/test-images folder. For example: ../dataset/test-images/2639.jpg (Note: enter the path without any quotation marks).
-   
-   The response should be something like:
-   
-   ```bash
-	Top 5 Predictions:
-
-	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}
-   ```
    
 ---
+
+
+## Other Ways to Run Predictions
+
+  If you want to run predictions on alternatives ways, you can use the predict.py directly or as a flask application. Both methods are explained below.
+   
+   
+	1. **Prepare the Environment**
+
+	Create a virtual environment with Pipenv for Python 3.9 and install all the dependencies: 
+		```bash
+		cd fashion-classification
+		pipenv --python 3.9
+		pipenv install
+		```  
+
+	2. **Run predictions**
+
+	The first step is to activate the Pipenv environment and navigate to the scripts folder:
+	
+		```bash
+		pipenv shell
+		cd scripts
+		```   	
+		
+	From there you can:
+	
+		a)***Run the script.py script***
+	
+			```bash
+			python predict.py "../dataset/test-images/2639.jpg"
+			```   	
+    
+			The response will look like this:
+			```bash
+			Top 5 Predictions:
+
+			{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
+			```	
+		or
+
+		b)***Serve the prediction script as a service***
+	
+			1-Start the Flask application using Gunicorn:
+				```bash
+				gunicorn predict:app --bind 0.0.0.0:8080
+				``` 
+			2-Use curl to send a request to the service with the path or URL of an image:
+				```bash	
+				curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
+				-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
+				``` 
+  
+			The response should be something like:
+			```bash	   
+			{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
+			```
+
+---
+
 
 ## Project Structure
 
@@ -149,6 +174,7 @@ fashion-classification/
 ├── Pipfile		# Project top-level requirements (to be used with pipenv)
 ├── Pipfile.lock	# Required dependencies with specific versions (to be used with pipenv)
 ├── README.md		# Project documentation
+├── scripts		# Scripts used for predictions and training
 ├── video/		# Folder that shows the lambda function being tested in AWS Lambda
 └── .gitignore		# Git ignore file
 ```
@@ -161,24 +187,30 @@ The Jupyter notebooks for this project were run locally on a machine with a GPU,
 
 The Jupyter notebooks in this project were used for Exploratory Data Analysis, Training, and Inference. Below is a description of each notebook:
 
--**notebook_1_eda_small_images.ipynb**
+	-**notebook_1_eda_small_images.ipynb**
 
-This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks while tuning their parameters.
+	This notebook was used for the Exploratory Data Analysis of the [Small Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small) and to train several neural networks while tuning their parameters.
 
-The final result in this notebook is the selection of the model to be trained on the larger dataset
+	The final result in this notebook is the selection of the model to be trained on the larger dataset
 
 
--**notebook2_training_large_dataset.ipynb**
+	-**notebook2_training_large_dataset.ipynb**
 
-This notebook was used primarily to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
+	This notebook was used primarily to train the model selected in the notebook1 on the [Large Images Dataset](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-dataset)
 
--**predict.ipynb**
+	-**predict.ipynb**
 
-This notebook was used to make predictions using the model trained in the notebook 2, leveraging Tensorflow for inference
+	This notebook was used to make predictions using the model trained in the notebook 2, leveraging Tensorflow for inference
 
--**predict_tflite.ipynb**
+	-**predict_tflite.ipynb**
 
-This notebook was used to create a TensorFlow Lite (TFLite) version of the model and use it to make predictions via the TFLite runtime
+	This notebook was used to create a TensorFlow Lite (TFLite) version of the model and use it to make predictions via the TFLite runtime
+
+---
+
+## Scripts
+
+There are other files on the scripts folder besides the predict.py script mentioned previously. The one that is worth mention is the training.py script that was created from the notebook 2 and that can be used to train the model on the large Kagglehub dataset
 
 ---
 

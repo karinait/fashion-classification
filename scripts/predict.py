@@ -6,6 +6,10 @@ import requests
 from PIL import Image
 from io import BytesIO
 import tflite_runtime.interpreter as tflite
+from flask import Flask, request, jsonify
+
+# Configuring the Flask application
+app = Flask(__name__)
 
 MODELS_DIR = '../models'
 MODEL_NAME = 'final_classification_model.keras'
@@ -32,7 +36,7 @@ def load_image(image_path_or_url):
     return img
 
 def initialize_interpreter():
-    tflite_model_path = os.environ.get('MODEL_PATH', './classification_model.tflite')    
+    tflite_model_path = os.environ.get('MODEL_PATH', f'{MODELS_DIR}/classification_model.tflite')    
     interpreter = tflite.Interpreter(model_path=tflite_model_path)
     interpreter.allocate_tensors()    
     return interpreter
@@ -40,7 +44,7 @@ def initialize_interpreter():
     
 def load_class_indices():
     #load classes from json file
-    classes_json_path=os.environ.get('CLASSES_PATH', './class_indices.json')
+    classes_json_path=os.environ.get('CLASSES_PATH', f'{MODELS_DIR}/class_indices.json')
     class_indices={}
     with open(classes_json_path, 'r') as json_file:
         class_indices = json.load(json_file)
@@ -83,42 +87,50 @@ def decode_predictions(preds, class_indices):
     top_predictions_dict = {class_label: score for class_label, score in top_predictions}
 
     return top_predictions_dict
+    
+def predict(image_path_or_url):
+    """Main function to make a prediction on an image."""
+    interpreter = initialize_interpreter()
+    class_indices = load_class_indices()
+    X = prepare_input(image_path_or_url)
+    preds = predict_for_image(interpreter, X)
+    return decode_predictions(preds, class_indices)
 
-# Set up argument parsing
-parser = argparse.ArgumentParser(description='Predict the class of an image using a trained model.')
-parser.add_argument('image_path_or_url', nargs='?', type=str, help='Path or Url to the image file for prediction')    
+@app.route('/predict', methods=['POST'])
+def predict_endpoint():
+    data = request.json
+    image_url = data.get('url')
 
-# Parse arguments
-args = parser.parse_args()
+    if not image_url:
+        return jsonify({'error': 'No image URL provided.'}), 400
 
-# Prompt for image path if not provided
-if args.image_path_or_url is None:
-    image_path_or_url = input("Enter the path to the image or URL: ")
-else:
-    image_path_or_url = args.image_path_or_url
+    try:
+        predictions = predict(image_url)
+        return jsonify(predictions)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500    
 
-# Validate input before proceeding
-if not image_path_or_url:
-    raise ValueError("No image path or URL provided.")
+if __name__ == '__main__':
+    # Set up argument parsing
+    parser = argparse.ArgumentParser(description='Predict the class of an image using a trained model.')
+    parser.add_argument('image_path_or_url', nargs='?', type=str, help='Path or Url to the image file for prediction')    
 
-# Create interpreter based on model
-tflite_model_path = f'{MODELS_DIR}/{TFLITE_MODEL_NAME}'
-interpreter = tflite.Interpreter(tflite_model_path)
-interpreter.allocate_tensors()
-print("Interpreter ready...")
+    # Parse arguments
+    args = parser.parse_args()
 
-# Load class indices from JSON file
-classes_json_path = f'{MODELS_DIR}/{CLASSES_JSON}'
-class_indices = {}
-with open(classes_json_path, 'r') as json_file:
-    class_indices = json.load(json_file)
-print("Class indices loaded...")
+    # Prompt for image path if not provided
+    if args.image_path_or_url is None:
+        image_path_or_url = input("Enter the path to the image or URL: ")
+    else:
+        image_path_or_url = args.image_path_or_url
 
-# Running prediction
-try:
-    preds = predict_for_image(interpreter, prepare_input(image_path_or_url))
-    top_predictions_dict = decode_predictions(preds, class_indices)
-    print("Top 5 Predictions:")
-    print(f"{top_predictions_dict}")
-except Exception as e:
-    print(f"An error occurred during prediction: {e}")
+    # Validate input before proceeding
+    if not image_path_or_url:
+        raise ValueError("No image path or URL provided.")
+
+    try:
+            predictions = predict(image_path_or_url)
+            print("Top Predictions:")
+            print(predictions)
+    except Exception as e:
+            print(f"An error occurred during prediction: {e}")
