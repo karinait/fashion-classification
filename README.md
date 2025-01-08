@@ -169,7 +169,7 @@ fashion-classification/
 │		├── styles.csv		# Csv with all the information about the images
 │   ├── test-images/		# Folder with large images for test	
 ├── fashion-classifier/		# Folder created with AWS SAM CLI for the deployment to AWS Lambda
-│   ├── app/		# Folder with all the necessary files for deployment
+│   ├── app/				# Folder with all the necessary files for deployment
 │		├── Dockerfile		# Docker configuration
 │		├── app.py			# Script with lambda function
 │		├── classification_model.tflite		# Trained Tflite model
