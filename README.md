@@ -55,37 +55,37 @@ To get started with this project and run the prediction service locally, you'll 
 
 ## Run the Prediction Service with Docker
 
-	1. **Clone the Repository**
-	   ```bash
-	   git clone https://github.com/karinait/fashion-classification.git
-	   cd fashion-classification
-	   ```
-	2. **Build the Docker Image**
-	   Use the provided `Dockerfile` to build the Docker image:
-	   ```bash
-	   cd fashion-classifier/app
-	   docker build -t fashion-classifier .
-	   ```
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/karinait/fashion-classification.git
+   cd fashion-classification
+   ```
+2. **Build the Docker Image**
+   Use the provided `Dockerfile` to build the Docker image:
+   ```bash
+   cd fashion-classifier/app
+   docker build -t fashion-classifier .
+   ```
 
-	3. **Run the Docker Container**
-	   Start the container to run the prediction service:
-	   ```bash
-	   docker run -it --rm -p8080:8080 fashion-classifier
-	   ```
+3. **Run the Docker Container**
+   Start the container to run the prediction service:
+   ```bash
+   docker run -it --rm -p8080:8080 fashion-classifier
+   ```
 
-	4. **Access the Service Locally**
-	   Use curl to post an image url to the service running at localhost:
-	   ```
-	   curl -X POST "http://localhost:8080/2015-03-31/functions/function/invocations" -H "Content-Type: application/json" \
-		-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
-	   ```
-	   The response should be something like:
-	   
-	   ```
-		{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
-	   ```   
-	 
-	   The category with the highest score corresponds to the most probable item type for the image. In this example, the most suitable item type for the image would be "Formal Shoes".   
+4. **Access the Service Locally**
+   Use curl to post an image url to the service running at localhost:
+   ```
+   curl -X POST "http://localhost:8080/2015-03-31/functions/function/invocations" -H "Content-Type: application/json" \
+	-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
+   ```
+   The response should be something like:
+   
+   ```
+	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
+   ```   
+ 
+   The category with the highest score corresponds to the most probable item type for the image. In this example, the most suitable item type for the image would be "Formal Shoes".   
 
    
 ---
@@ -93,58 +93,58 @@ To get started with this project and run the prediction service locally, you'll 
 
 ## Other Ways to Run Predictions
 
-  If you want to run predictions on alternatives ways, you can use the predict.py directly or as a flask application. Both methods are explained below.
-   
-   
-	1. **Prepare the Environment**
+If you want to run predictions on alternatives ways, you can use the predict.py directly or as a flask application. Both methods are explained below.
 
-	Create a virtual environment with Pipenv for Python 3.9 and install all the dependencies: 
+
+1. **Prepare the Environment**
+
+Create a virtual environment with Pipenv for Python 3.9 and install all the dependencies: 
+	```bash
+	cd fashion-classification
+	pipenv --python 3.9
+	pipenv install
+	```  
+
+2. **Run predictions**
+
+The first step is to activate the Pipenv environment and navigate to the scripts folder:
+
+	```bash
+	pipenv shell
+	cd scripts
+	```   	
+	
+From there you can:
+
+a)***Run the script.py script***
+
+	```bash
+	python predict.py "../dataset/test-images/2639.jpg"
+	```   	
+
+	The response will look like this:
+	```bash
+	Top 5 Predictions:
+
+	{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
+	```	
+or
+
+b)***Serve the prediction script as a service***
+
+	1-Start the Flask application using Gunicorn:
 		```bash
-		cd fashion-classification
-		pipenv --python 3.9
-		pipenv install
-		```  
+		gunicorn predict:app --bind 0.0.0.0:8080
+		``` 
+	2-Use curl to send a request to the service with the path or URL of an image:
+		```bash	
+		curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
+		-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
+		``` 
 
-	2. **Run predictions**
-
-	The first step is to activate the Pipenv environment and navigate to the scripts folder:
-	
-		```bash
-		pipenv shell
-		cd scripts
-		```   	
-		
-	From there you can:
-	
-		a)***Run the script.py script***
-	
-			```bash
-			python predict.py "../dataset/test-images/2639.jpg"
-			```   	
-    
-			The response will look like this:
-			```bash
-			Top 5 Predictions:
-
-			{'Casual Shoes': 0.2870946526527405, 'Flats': 0.06451930850744247, 'Formal Shoes': 0.4267609715461731, 'Heels': 0.1557253748178482, 'Sandals': 0.05419463291764259}   
-			```	
-		or
-
-		b)***Serve the prediction script as a service***
-	
-			1-Start the Flask application using Gunicorn:
-				```bash
-				gunicorn predict:app --bind 0.0.0.0:8080
-				``` 
-			2-Use curl to send a request to the service with the path or URL of an image:
-				```bash	
-				curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
-				-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
-				``` 
-  
-			The response should be something like:
-			```bash	   
-			{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
+	The response should be something like:
+	```bash	   
+	{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
 			```
 
 ---
