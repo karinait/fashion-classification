@@ -136,22 +136,22 @@ b)***Serve the prediction script as a service***
 
 1-Start the Flask application using Gunicorn:
 
-	```bash
-	gunicorn predict:app --bind 0.0.0.0:8080
-	``` 
+```bash
+gunicorn predict:app --bind 0.0.0.0:8080
+``` 
 	
 2-Use curl to send a request to the service with the path or URL of an image:
 
-	```bash	
-	curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
-	-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
-	``` 
+```bash	
+curl -X POST "http://localhost:8080/predict" -H "Content-Type: application/json" \
+-d '{ "url":  "http://bit.ly/mlbookcamp-pants"}'
+``` 
 
 The response should be something like:
 
-	```bash	   
-	{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
-	```
+```bash	   
+{"Jackets":0.11359871178865433,"Shorts":0.028773579746484756,"Tops":0.02065521851181984,"Track Pants":0.5611394643783569,"Trousers":0.24156157672405243}
+```
 
 ---
 
